@@ -92,10 +92,14 @@ self.addEventListener("fetch", (event) => {
         if (req.headers.get("Accept").includes("text/html")) {
           //if have means we're dealing w the container page'
           //Check if we have a previously cached content
-          return caches.open(contentCache).then((cache) => {
-            //find the request, coz the req is the key
-            //Attempt to match the content with the request
-            cache.match(req).then((resp) => {
+          return caches
+            .open(contentCache)
+            .then((cache) =>
+              //find the request, coz the req is the key
+              //Attempt to match the content with the request
+              cache.match(req)
+            )
+            .then((resp) => {
               //Found the response to the request
               //if resp is not null, return the resp
               if (!!resp) return resp;
@@ -107,8 +111,8 @@ self.addEventListener("fetch", (event) => {
                   .then((cache) => cache.match("/offline.html"))
               );
             });
-          });
         }
+
         //Otherwise all other resource type, look it up from our asset cache
         return caches.match(req); //attempt to match across all your cache
         // return caches.open(assetCache).then((cache) => cache.match(req)); //if yknow which specific cache to look in
